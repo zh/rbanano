@@ -357,17 +357,12 @@ module Banano
 
     # Receives a pending payment into an account in the wallet.
     #
-    # When called with no +block+ argument, the latest pending payment
-    # for the account will be received.
-    #
     # Returns a <i>receive</i> block hash id if a receive was successful,
     # or +false+ if there were no pending payments to receive.
     #
-    # You can receive a specific pending block if you know it by
-    # passing the block has in as an argument.
+    # Receive a specific pending block by passing block_id as an argument
     # ==== Examples:
     #
-    #   wallet.receive(into: "ban_..")               # => "9AE2311..."
     #   wallet.receive("718CC21...", into: "ban_..") # => "9AE2311..."
     #
     # @param block (see Banano::WalletAccount#receive)
@@ -375,7 +370,7 @@ module Banano
     #   payment into
     #
     # @return (see Banano::WalletAccount#receive)
-    def receive(block: nil, into:)
+    def receive(block:, into:)
       wallet_required!
       validate_wallet_contains_account!(into)
       # account(into) will return Banano::WalletAccount
@@ -403,6 +398,8 @@ module Banano
       account.create(accounts) if accounts > 0
       self
     end
+
+    private
 
     def rpc(action:, params: {})
       p = @wallet.nil? ? {} : {wallet: @wallet}

@@ -7,6 +7,8 @@ require 'forwardable'
 #
 module Banano
   class WalletAccount
+    attr_accessor :account, :wallet
+
     extend Forwardable
     # @!method balance(raw: true)
     #   (see Banano::Account#balance)
@@ -157,20 +159,15 @@ module Banano
     #
     # ==== Examples:
     #
-    #   account.receive               # => "9AE2311..."
     #   account.receive("718CC21...") # => "9AE2311..."
     #
-    # @param block [String] optional block id of pending payment. If
-    #   not provided, the latest pending payment will be received
+    # @param block [String] block id of pending payment.
     #
     # @return [String] the receive block id
     # @return [false] if there was no block to receive
-    def receive(block = nil)
-      if block.nil?
-        _receive_without_block
-      else
-        _receive_with_block(block)
-      end
+    def receive(block)
+      response = rpc(action: :receive, params: {block: block})[:block]
+      response.nil? ? false : response
     end
 
     # Sets the representative for the account.
@@ -197,22 +194,6 @@ module Banano
     end
 
     private
-
-    def _receive_without_block
-      # Discover the first pending block
-      pending_blocks = rpc(action: :pending, params: {account: @account, count: 1})
-
-      return false if pending_blocks[:blocks].empty?
-
-      # Then call receive_with_block as normal
-      _receive_with_block(pending_blocks[:blocks][0])
-    end
-
-    # Returns block if successful, otherwise false
-    def _receive_with_block(block)
-      response = rpc(action: :receive, params: {block: block})[:block]
-      response.nil? ? false : response
-    end
 
     def rpc(action:, params: {})
       p = {}

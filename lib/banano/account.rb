@@ -104,7 +104,7 @@ module Banano
       params = {count: limit}
       params[:source] = true if detailed
 
-      response = rpc(action: :pending, params: params)[:blocks]
+      response = rpc(action: :wallet_pending, params: params)[:blocks]
       return response unless detailed && !response.empty?
 
       response.map do |key, val|
