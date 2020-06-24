@@ -70,7 +70,7 @@ module Banano
     #   wallet.account.create     # => Banano::WalletAccount
     #
     # @param [String] account optional String of an account (starting with
-    #   <tt>"xrb..."</tt>) to start working with. Must be an account within
+    #   <tt>"ban_..."</tt>) to start working with. Must be an account within
     #   the wallet. When no account is given, the instance returned only
     #   allows you to call +create+ on it, to create a new account.
     # @raise [ArgumentError] if the wallet does no contain the account
@@ -403,8 +403,6 @@ module Banano
       account.create(accounts) if accounts > 0
       self
     end
-
-    private
 
     def rpc(action:, params: {})
       p = @wallet.nil? ? {} : {wallet: @wallet}

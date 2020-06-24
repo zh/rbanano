@@ -128,7 +128,7 @@ module Banano
       response = rpc(action: :validate_account_number, params: {account: to})
       raise ArgumentError, "Account address is invalid: #{to}" unless response[:valid] == '1'
 
-      raw_amount = raw ? amount : Banano::Unit.ban_to_raw(amount)
+      raw_amount = raw ? amount : Banano::Unit.ban_to_raw(amount).to_s
       # account is called source, so don't use the normal rpc method
       p = {
         wallet: @wallet,
