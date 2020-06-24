@@ -10,13 +10,13 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Library for working with Banano currency.'
   spec.description   = 'Library for working with Banano currency. Implements parts of the RPC protocol for access to Banano node. Convertion between raw and banano units etc.'
-  spec.homepage      = "http://github.com/zh/rbanano"
+  spec.homepage      = "https://github.com/zh/rbanano"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "http://github.com/zh/rbanano"
-  spec.metadata["changelog_uri"] = "http://github.com/zh/rbanano/CHANGELOG.md"
+  spec.metadata["source_code_uri"] = "https://github.com/zh/rbanano"
+  spec.metadata["changelog_uri"] = "https://github.com/zh/rbanano/blob/master/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
