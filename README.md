@@ -52,7 +52,7 @@ If it is impossible to be done, you can use the [Public bananode RPC API](https:
 
 ```rb
 BETA_URL = 'https://api-beta.banano.cc'
-@anano = Banano::Protocol.new(uri: BETA_URL)
+@banano = Banano::Protocol.new(uri: BETA_URL)
 # From here it is easy to create other object, without sending URI to them
 wallet = @banano.wallet('WALLET15263636...')
 account = @banano.account('ban_1...')
@@ -97,9 +97,9 @@ wallet.contains?('ban_1...')     # check if the account exists in the current wa
 wallet.default_representative
 wallet.change_default_representative('ban_1...')
 wallet.change_password('SomePassword')   # protect your wallet
-walled.lock                              # no more payments
+wallet.lock                              # no more payments
 wallet.locked?
-walled.unlock('SomePassword')            # resume receiving payments
+wallet.unlock('SomePassword')            # resume receiving payments
 wallet.balance                           # check how many banano the whole wallet have, RAW units
 wallet.balance(raw: false)               # wallet balance in Banano units
 wallet.balance(account_break_down: true) # banano per acount, RAW units
@@ -122,7 +122,7 @@ account.last_modified_at
 account.public_key
 account.representative
 account.balance             # in RAW units
-accunt.balance(raw: false)  # in banano units
+account.balance(raw: false)  # in banano units
 # Payments
 account.pending(limit: 100, detailed: true)  # detailed information about the pending payments
 account.history(limit: 10)  # the latest payments - send and receive
@@ -161,7 +161,7 @@ key_builder.generate(seed: SEED, index: 0)    # will always generate SAME pair o
 key_builder.generate(seed: SEED, index: 1)
 new_builder = @banano.key(saved_private_key)  # generate keys from saved private key
 new_builder.expand                            # return private, public key and account address
-``` 
+```
 
 ### Banano::Unit
 
