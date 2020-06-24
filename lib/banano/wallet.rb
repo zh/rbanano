@@ -388,7 +388,7 @@ module Banano
     #
     # ==== Example:
     #
-    #   Banano::Protocol.new.wallet.restore(seed) # => Nanook::Wallet
+    #   Banano::Protocol.new.wallet.restore(seed: seed, accounts: 1) # => Banano::Wallet
     #
     # @param seed [String] the wallet seed to restore.
     # @param accounts [Integer] optionally restore the given number of accounts for the wallet.
@@ -398,7 +398,7 @@ module Banano
     def restore(seed:, accounts: 0)
       create
 
-      raise Nanook::Error, "Unable to set seed for wallet" unless change_seed(seed)
+      raise Banano::Error, "Unable to set seed for wallet" unless change_seed(seed)
 
       account.create(accounts) if accounts > 0
       self
