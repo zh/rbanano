@@ -45,7 +45,8 @@ module Banano
 
     # @return [Hash{Symbol=>String}] information about the node peers
     def peers
-      rpc(action: :peers)[:peers]
+      h = -> (h) { Hash[h.map{ |k,v| [k.to_s, v] }] }
+      h.call(rpc(action: :peers)[:peers])
     end
 
     # All representatives and their voting weight.
@@ -54,6 +55,7 @@ module Banano
     # @return [Hash{Symbol=>Integer}] known representatives and their voting weight
     def representatives(raw = true)
       response = rpc(action: :representatives)[:representatives]
+      response = response.delete_if {|_, balance| balance.to_s == '0' } # remove 0 balance reps
       return response if raw == true
 
       r = response.map do |address, balance|
