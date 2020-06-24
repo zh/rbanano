@@ -40,9 +40,10 @@ The code is divided on following the parts:
 - `Banano::Protocol` - including all other parts. Can be used also for some syntax sugar (to avoid sending node parameter to constructors)
 - `Banano::Client` - very thin wrapper around [Faraday HTTP Client](https://github.com/lostisland/faraday) for easy JSON-based communications
 - `Banano::Node` - Banano Node abstraction - mostly encapsulate JSON communications
-- `Bananp::Wallet` - wallets holding for Banano accounts on the current node
-- `Bananp::Account` - uniq 'ban_...' addresses used for currency tokens exchange
-- `Bananp::WalletAccount` - link between `Account` and `Wallet` - check if account exists in the wallet etc.
+- `Banano::Wallet` - wallets holding for Banano accounts on the current node
+- `Banano::Account` - uniq 'ban_...' addresses used for currency tokens exchange
+- `Banano::WalletAccount` - link between `Account` and `Wallet` - check if account exists in the wallet etc.
+- `Banano::Key` - account key management
 
 ### Banano::Protocol
 
@@ -56,6 +57,7 @@ BETA_URL = 'https://api-beta.banano.cc'
 wallet = @banano.wallet('WALLET15263636...')
 account = @banano.account('ban_1...')
 ```
+
 ### Banano::Client
 
 Not used directly, better use `Banano::Node` instead
@@ -67,7 +69,7 @@ client.rpc_call(action: :version)
 
 ### Banano::Node
 
-Most of the information about the running node is encapsulated here. The other parts using  mostly the `Banano::Node.rpc()` method, not the low level client one: 
+Most of the information about the running node is encapsulated here. The other parts using  mostly the `Banano::Node.rpc()` method, not the low level client one:
 
 ```rb
 Banano::Node.account_count # number of node accounts
@@ -143,6 +145,23 @@ wallet_other_acc.pay(to: 'ban_1...', amount: 10, raw: false, id: 'x1234')  # sen
 wallet_other_acc.receive   # receive some banano
 
 ```
+
+### Banano::Key
+
+Most of the information is identicat with the [NANO currency docs](https://docs.nano.org/integration-guides/key-management/).
+
+```rb
+key_builder = @banano.key    # create new key (still unpopulated, cannot be used)
+key_builder.generate         # generate private, public key and account address
+{:private=>"43E6B...",
+ :public=>"7EBC0C...",
+ :account=>"ban_1zow3..."}
+SEED = 'ABF56EBB...'         # Random seed
+key_builder.generate(seed: SEED, index: 0)    # will always generate SAME pair of keys and address
+key_builder.generate(seed: SEED, index: 1)
+new_builder = @banano.key(saved_private_key)  # generate keys from saved private key
+new_builder.expand                            # return private, public key and account address
+``` 
 
 ### Banano::Unit
 
