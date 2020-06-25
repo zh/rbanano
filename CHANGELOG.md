@@ -1,3 +1,8 @@
+## v0.1.2
+
+- README fixes - typos and wallet usage
+- Banano::Block and Banano::WorkPeer abstractions added
+
 ## v0.1.1
 
 - Pending payments fixes - block\_id is mandatory
