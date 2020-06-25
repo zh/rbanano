@@ -36,7 +36,6 @@ gem install banano
 
 The code is divided on following the parts:
 
-- `Banano::Unit` - conversion between [RAW and Banano units](https://nanoo.tools/banano-units)
 - `Banano::Protocol` - including all other parts. Can be used also for some syntax sugar (to avoid sending node parameter to constructors)
 - `Banano::Client` - very thin wrapper around [Faraday HTTP Client](https://github.com/lostisland/faraday) for easy JSON-based communications
 - `Banano::Node` - Banano Node abstraction - mostly encapsulate JSON communications
@@ -44,6 +43,9 @@ The code is divided on following the parts:
 - `Banano::Account` - uniq 'ban_...' addresses used for currency tokens exchange
 - `Banano::WalletAccount` - link between `Account` and `Wallet` - check if account exists in the wallet etc.
 - `Banano::Key` - account key management
+- `Banano::Block` - low level work with individual blocks
+- `Banano::WorkPeer` - do work on peers
+- `Banano::Unit` - conversion between [RAW and Banano units](https://nanoo.tools/banano-units)
 
 ### Banano::Protocol
 
@@ -162,6 +164,37 @@ key_builder.generate(seed: SEED, index: 0)    # will always generate SAME pair o
 key_builder.generate(seed: SEED, index: 1)
 new_builder = @banano.key(saved_private_key)  # generate keys from saved private key
 new_builder.expand                            # return private, public key and account address
+```
+
+### Banano::WorkPeer
+
+Delegate block validating work to some network peers:
+
+```rb
+work = Banano::WorkPeer(@banano.node)
+work.add(address: '::ffff:1.2.3.4', port: '7071')  # add peer to the work flow
+work.list  # list of working peers
+work.clear # remove all peers
+```
+
+### Banano::Block
+
+Blocks, also known as transactions are the building items of the banano network.
+Every block have uniq ID, which can be used for processing the block
+
+```rb
+block = Banano::Block(node: @banano.node, block: 'F1B7EDB1...')
+block.account           # account associated with the block
+block.successors(limit: 10)
+block.chain(limit: 10)  # also 'block.ancestors' - blocks chain, leading to the current one
+block.history           # more detailed chain history
+block.info              # information about the block
+block.confirm           # block confirmation from the online representatives
+work = block.generate_work(use_peers: true) # start some work
+block.is_valid_work?(work) # check if the work done is valid
+block.cancel_work       # stop generating work for block
+block.pending?          # is the block in pending state. not work very well...
+block.publish('send')   # dependes what kind of block is this: 'send', 'receive' etc.
 ```
 
 ### Banano::Unit

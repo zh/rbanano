@@ -21,7 +21,18 @@ module Banano
       Banano::Account.new(node: @node, address: address)
     end
 
-    # Returns a new instance of {Nanook::Key}.
+    # Returns a new instance of {Banano::Block}.
+    #
+    # ==== Example:
+    #   block = Banano::Protocol.new.block("FBF8B0E...")
+    #
+    # @param block [String] the id/hash of the block you want to work with
+    # @return [Banano::Block]
+    def block(block)
+      Banano::Block.new(node: @node, block: block)
+    end
+
+    # Returns a new instance of {Banano::Key}.
     #
     # ==== Example:
     #   key = Banano::Protocol.new.key("3068BB...")
