@@ -89,25 +89,26 @@ Wallets are like a bags of accounts. Accounts can be only local, created on the 
 
 ```rb
 wallet = Banano::Wallet.create   # create new wallet
-wallet.destroy                   # remove the wallet
-wallet.export                    # export wallet to JSON
+wallet.restore(seed: 'XVVREGNN...') # restore some wallet and its accounts
 wallet.accounts                  # current wellet accounts
 wallet.contains?('ban_1...')     # check if the account exists in the current wallet
+wallet.export                    # export wallet to JSON
+wallet.destroy                   # remove the wallet
 # Accounts with voting power
 wallet.default_representative
 wallet.change_default_representative('ban_1...')
+# Security
 wallet.change_password('SomePassword')   # protect your wallet
 wallet.lock                              # no more payments
 wallet.locked?
 wallet.unlock('SomePassword')            # resume receiving payments
+# Payments
+block_id = wallet.pay(from: 'ban_1...', to: 'ban_3...', amount: '1.23', raw: false, id: 'x123')
+wallet.pending(limit: 10, detailed: true)  # waiting payments (does not work well unless enable_control = true)
+wallet.receive(into: 'ban_1', block: block_id)  # receive the pending banano into some wallet account
 wallet.balance                           # check how many banano the whole wallet have, RAW units
 wallet.balance(raw: false)               # wallet balance in Banano units
 wallet.balance(account_break_down: true) # banano per acount, RAW units
-# Payments
-wallet.pay(from: 'ban_1...', to: 'ban_3...', amount: '1.23', raw: false, id: 'x123')
-wallet.pending(limit: 10, detailed: true)  # some payments waiting wallet unlock
-wallet.receive(into: 'ban_1')            # receive the pending banano into some wallet account
-wallet.restore(seed: 'XVVREGNN...')      # restore some wallet on the current node
 ```
 
 ### Banano::Account
@@ -136,13 +137,13 @@ Because accounts and wallets so closly connected, some linkage object is very he
 wallet = @banano.wallet('XBHHNN...')
 # create wallet <-> accounts connection
 wallet_acc = Banano::WalletAccount(node: @banano.node, wallet: wallet.id)
-wallet_acc.create     # create account in the wallet
+wallet_acc.create     # create new account in the wallet
 wallet_acc.create(3)  # create additional 3 accounts inside the same wallet
 # Working with specific account
 account = @banano.account('ban_1')
-wallet_other_acc = Banano::WalletAccount(node: pbanano.node, wallet: wallet.id, account: account.id)
-wallet_other_acc.pay(to: 'ban_1...', amount: 10, raw: false, id: 'x1234')  # send some banano
-wallet_other_acc.receive   # receive some banano
+wallet_other_acc = Banano::WalletAccount(node: @banano.node, wallet: wallet.id, account: account.id)
+block_id = wallet_other_acc.pay(to: 'ban_1...', amount: 10, raw: false, id: 'x1234')  # send some banano
+wallet_other_acc.receive(block_id)   # receive some banano
 
 ```
 
