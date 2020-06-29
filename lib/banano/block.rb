@@ -253,5 +253,11 @@ module Banano
     def block_required!
       raise ArgumentError, "Block must be present" if @block.nil?
     end
+
+    def _parse_info_response(response)
+      parsed_contents = Util.symbolize_keys(JSON.parse(response[:contents]))
+      response[:contents] = parsed_contents
+      response
+    end
   end
 end
