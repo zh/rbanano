@@ -1,3 +1,7 @@
+## v0.1.3
+
+- Bugfix: Missing block info parsing method added
+
 ## v0.1.2
 
 - README fixes - typos and wallet usage
